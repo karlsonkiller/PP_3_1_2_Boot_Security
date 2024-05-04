@@ -1,12 +1,12 @@
 package ru.kata.spring.boot_security.demo.service;
 
 
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.project.crud_on_springboot.dao.UserDao;
-import ru.project.crud_on_springboot.model.User;
+import ru.kata.spring.boot_security.demo.dao.UserDao;
+import ru.kata.spring.boot_security.demo.model.User;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
