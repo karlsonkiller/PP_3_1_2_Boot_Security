@@ -2,9 +2,9 @@ package ru.kata.spring.boot_security.demo.model;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -12,19 +12,29 @@ public class User implements UserDetails, GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
+    @Column(name = "name")
     private String firstName;
-    private String lastName;
+
+    @Column(name = "user_age")
     private Integer age;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private List<Role> roles ;
 
     public User() {
 
     }
 
-    public User(String firstName, String lastName, Integer age) {
+    public User(String firstName, Integer age) {
         this.firstName = firstName;
-        this.lastName = lastName;
         this.age = age;
     }
 
@@ -42,14 +52,6 @@ public class User implements UserDetails, GrantedAuthority {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public Integer getAge() {
