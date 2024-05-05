@@ -30,19 +30,19 @@ public class AdminController {
         return "show";
     }
 
-    @GetMapping("/admin/creat_user")
+    @GetMapping("/admin/create_user")
     public String newPerson(@ModelAttribute("users") User user) {
         return "new";
     }
 
-    @PostMapping("/creat_user")
+    @PostMapping("/create_user")
     public String create(@ModelAttribute("users") @Valid User user,
                          BindingResult bindingResult) {
         if (bindingResult.hasErrors())
             return "new";
 
         userService.save(user);
-        return "redirect:/users";
+        return "redirect:/index";
     }
 
     @GetMapping("/admin/{id}/update_user")
@@ -58,12 +58,12 @@ public class AdminController {
             return "editor";
 
         userService.updateUser(id, user);
-        return "redirect:/users";
+        return "redirect:/index";
     }
 
     @DeleteMapping("/admin/{id}")
     public String delete(@PathVariable("id") Long id) {
         userService.deleteUser(id);
-        return "redirect:/users";
+        return "redirect:/index";
     }
 }
