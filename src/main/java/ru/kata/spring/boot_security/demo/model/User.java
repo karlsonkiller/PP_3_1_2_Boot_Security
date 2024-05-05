@@ -2,17 +2,14 @@ package ru.kata.spring.boot_security.demo.model;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ru.kata.spring.boot_security.demo.repo.UserRepos;
-
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
 public class User implements UserDetails, GrantedAuthority {
-    private final UserRepos userRepo;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -36,12 +33,8 @@ public class User implements UserDetails, GrantedAuthority {
     )
     private Set<Role> roles;
 
-    public User(UserRepos userRepo) {
-        Role adminRole = new Role("ROLE_ADMIN");
-        Role userRole = new Role("ROLE_USER");
+    public User() {
 
-        userRepo.save(new User("user", "user","1234" ,Set.of(userRole)));
-        userRepo.save(new User("admin", "admin","1234",Set.of(adminRole)));
     }
 
     public String getLastName() {
