@@ -15,7 +15,7 @@ public class Role implements UserDetails, GrantedAuthority {
     private Long id;
 
     @Column(name = "role")
-    private String name;
+    private String nameRole;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
@@ -25,8 +25,8 @@ public class Role implements UserDetails, GrantedAuthority {
     )
     private List<User> users;
 
-    public Role(String name) {
-        this.name = name;
+    public Role(String nameRole) {
+        this.nameRole = nameRole;
     }
 
     public Role(Long id) {

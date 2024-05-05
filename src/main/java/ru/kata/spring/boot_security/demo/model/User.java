@@ -18,8 +18,8 @@ public class User implements UserDetails, GrantedAuthority {
     @Column(name = "name")
     private String firstName;
 
-    @Column(name = "user_age")
-    private Integer age;
+    @Column(name = "password")
+    private String password;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
@@ -27,15 +27,19 @@ public class User implements UserDetails, GrantedAuthority {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private List<Role> roles ;
+    private List<Role> roles;
 
     public User() {
 
     }
 
-    public User(String firstName, Integer age) {
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public User(String firstName, Integer age, String password) {
         this.firstName = firstName;
-        this.age = age;
+        this.password = password;
     }
 
     public Long getId() {
@@ -54,14 +58,6 @@ public class User implements UserDetails, GrantedAuthority {
         this.firstName = firstName;
     }
 
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
     @Override
     public String getAuthority() {
         return null;
@@ -74,7 +70,7 @@ public class User implements UserDetails, GrantedAuthority {
 
     @Override
     public String getPassword() {
-        return null;
+        return this.password;
     }
 
     @Override

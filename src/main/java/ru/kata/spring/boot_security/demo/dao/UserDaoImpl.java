@@ -34,7 +34,6 @@ public class UserDaoImpl implements UserDao {
         User user = foundUser(id);
         if (user != null) {
             user.setFirstName(update_user.getFirstName());
-            user.setAge(update_user.getAge());
             entityManager.merge(user);
         }
     }
