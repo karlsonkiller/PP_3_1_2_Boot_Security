@@ -2,6 +2,7 @@ package ru.kata.spring.boot_security.demo.service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
 import ru.kata.spring.boot_security.demo.model.User;
@@ -13,42 +14,43 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final UserDao userDao;
-
     private final UserRepos userRepos;
 
-    @Autowired
-    public UserServiceImpl(UserDao userDao, UserRepos userRepos) {
-        this.userDao = userDao;
-        this.userRepos = userRepos;
+    private final PasswordEncoder passwordEncoder;
+
+    public UserServiceImpl(UserRepos userRepo, PasswordEncoder passwordEncoder) {
+        this.userRepos = userRepo;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public List<User> getAllUser() {
-        return userDao.getAllUser();
+        return userRepos.findAll();
     }
 
     @Override
     public User foundUser(Long id) {
-        return userDao.foundUser(id);
+        return userRepos.getById(id);
     }
 
     @Override
     @Transactional
     public void save(User user) {
-        userDao.save(user);
+        userRepos.save(user);
     }
 
     @Override
     @Transactional
     public void updateUser(Long id, User user) {
-        userDao.updateUser(id, user);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setId(id);
+        userRepos.save(user);
     }
 
     @Override
     @Transactional
     public void deleteUser(Long id) {
-        userDao.deleteUser(id);
+        userRepos.deleteById(id);
     }
 
     @Override

@@ -15,7 +15,7 @@ import javax.validation.Valid;
 @Controller
 public class AdminController {
 
-    private UserService userService;
+    private UserServiceImpl userService;
 
     private RoleService roleService;
 
@@ -42,39 +42,36 @@ public class AdminController {
     }
 
     @GetMapping("/admin/create_user")
-    public String newPerson(@ModelAttribute("users") User user) {
+    public String newPerson(Model model) {
+        model.addAttribute("user", new User());
+        model.addAttribute("roles", roleService.getAllUser());
         return "new";
     }
 
     @PostMapping("/create_user")
-    public String create(@ModelAttribute("users") @Valid User user,
-                         BindingResult bindingResult) {
-        if (bindingResult.hasErrors())
-            return "new";
-
+    public String createUser(@ModelAttribute("user") User user) {
         userService.save(user);
-        return "redirect:/index";
+        user.setPassword(user.getPassword());
+        return "redirect:/admin";
     }
 
     @GetMapping("/admin/{id}/update_user")
     public String edit(Model model, @PathVariable("id") Long id) {
-        model.addAttribute("users", userService.foundUser(id));
+        model.addAttribute("user", userService.foundUser(id));
+        model.addAttribute("roles", roleService.getAllUser());
         return "editor";
     }
 
     @PostMapping("/admin/{id}/update_user")
-    public String update(@ModelAttribute("users") @Valid User user, BindingResult bindingResult,
-                         @PathVariable("id") Long id) {
-        if (bindingResult.hasErrors())
-            return "editor";
-
+    public String update(@ModelAttribute("user") User user, @PathVariable("id") Long id) {
+        user.setPassword(user.getPassword());
         userService.updateUser(id, user);
-        return "redirect:/index";
+        return "redirect:/admin";
     }
 
     @DeleteMapping("/admin/{id}")
     public String delete(@PathVariable("id") Long id) {
         userService.deleteUser(id);
-        return "redirect:/index";
+        return "redirect:/admin";
     }
 }

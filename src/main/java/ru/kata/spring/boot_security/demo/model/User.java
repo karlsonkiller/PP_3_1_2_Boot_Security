@@ -1,5 +1,9 @@
 package ru.kata.spring.boot_security.demo.model;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
@@ -8,7 +12,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User implements UserDetails, GrantedAuthority {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +29,9 @@ public class User implements UserDetails, GrantedAuthority {
     private String password;
 
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @LazyCollection(LazyCollectionOption.EXTRA)
+    @Fetch(FetchMode.JOIN)
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -78,11 +84,6 @@ public class User implements UserDetails, GrantedAuthority {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
-    }
-
-    @Override
-    public String getAuthority() {
-        return null;
     }
 
     @Override
